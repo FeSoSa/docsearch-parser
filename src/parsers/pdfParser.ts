@@ -1,8 +1,9 @@
 import * as pdfjsLib from 'pdfjs-dist';
 import { ParsedDocument } from '../types';
 
-export async function extractTextFromPdf(buffer: ArrayBuffer): Promise<ParsedDocument> {
-    const doc = await pdfjsLib.getDocument({ data: buffer }).promise;
+export async function extractTextFromPdf(buffer: Buffer): Promise<ParsedDocument> {
+    const data = new Uint8Array(buffer);
+    const doc = await pdfjsLib.getDocument({ data: data }).promise;
     let fullText = '';
 
     for (let i = 1; i <= doc.numPages; i++) {
@@ -17,5 +18,4 @@ export async function extractTextFromPdf(buffer: ArrayBuffer): Promise<ParsedDoc
         sourceType: 'pdf',
         metadata: { pageCount: doc.numPages }
     }
-
 }

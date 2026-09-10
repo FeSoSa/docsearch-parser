@@ -29,6 +29,7 @@
     "vitest": "^3.2.7"
   },
   "dependencies": {
+    "mammoth": "^1.12.2",
     "pdfjs-dist": "^4.8.69"
   }
 }
