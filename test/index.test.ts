@@ -1,7 +1,9 @@
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { describe, expect, it } from 'vitest';
+import { detectFile } from '../src/detectFileType';
 import { extractTextFromDocx } from '../src/parsers/docxParser';
+import { parseFile } from '../src/parsers/parseFile';
 import { extractTextFromPdf } from '../src/parsers/pdfParser';
 
 describe('PdfParser', () => {
@@ -87,4 +89,42 @@ describe('DocxParser', () => {
             expect(error.name).toBe('Error')
         }
     })
+})
+
+describe('DetectFile', () => {
+    it('should detect a pdf file', async () => {
+        const samplePath = path.join(__dirname, 'fixture', 'sample.pdf');
+        const buffer = readFileSync(samplePath)
+        const result = await detectFile(buffer)
+        expect(result).toBe('pdf')
+    })
+
+    it('should detect a docx file', async () => {
+        const samplePath = path.join(__dirname, 'fixture', 'sample.docx');
+        const buffer = readFileSync(samplePath)
+        const result = await detectFile(buffer)
+        expect(result).toBe('docx')
+    })
+
+})
+
+describe('ParseFile', () => {
+    it('Should parse pdf to text', async () => {
+        const samplePath = path.join(__dirname, 'fixture', 'sample.pdf');
+        const buffer = readFileSync(samplePath)
+        const result = await parseFile(buffer)
+
+        expect(result.sourceType).toBe('pdf')
+        expect(result.text.length).toBeGreaterThan(0)
+    })
+
+    it('Should parse docx to text', async () => {
+        const samplePath = path.join(__dirname, 'fixture', 'sample.docx');
+        const buffer = readFileSync(samplePath)
+        const result = await parseFile(buffer)
+
+        expect(result.sourceType).toBe('docx')
+        expect(result.text.length).toBeGreaterThan(0)
+    })
+
 })
